@@ -6,7 +6,7 @@ from itertools import chain
 from io import BytesIO
 import numpy as np
 import torch
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+from transformers import AutoTokenizer
 
 
 #TSVファイルの読み込み
@@ -39,7 +39,7 @@ def get_token(text,MODEL_NAME):
 
 #ひらがな判定
 def is_hiragana(value):
-  return re.match(r'^[\u3040-\u309F]+$', value) is not None
+    return re.match(r'^[\u3040-\u309F]+$', value) is not None
 
 
 #欠落
@@ -57,7 +57,7 @@ def skip(s:str, ratio,MODEL_NAME):
                 buffer.append(token[index])
         else:
             buffer.append(token[index])
-        buffer = "".join(buffer)
+    buffer = "".join(buffer)
     return buffer
 
 
@@ -68,9 +68,13 @@ def main():
     set_seed(42)
 
     MODEL_NAME = 'google/mt5-small'
+    
+    wtitefile = 'kyoudai_goji_40.tsv'
 
-    for line in ss:
-        sentence = line[0]
-        new_sentence = skip(sentence, 0.40,MODEL_NAME)
-        print(new_sentence)
+    with open(wtitefile,'w') as f2:
+        for line in ss:
+            sentence = line[0]
+            new_sentence = skip(sentence, 0.40,MODEL_NAME)
+            f2.write(new_sentence+'\t'+line[1]+'\n')
+
 main()
